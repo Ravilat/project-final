@@ -34,6 +34,9 @@ public class RestExceptionHandler extends BasicExceptionHandler {
 
     protected ProblemDetail createProblemDetail(Exception ex, HttpStatusCode status, String defaultDetail) {
         ErrorResponse.Builder builder = ErrorResponse.builder(ex, status, defaultDetail);
-        return builder.build().updateAndGetBody(errorMessageHandler.getMessageSource(), LocaleContextHolder.getLocale());
+        ProblemDetail pd = builder.build().getBody();
+        pd.setDetail(ex.getMessage() != null ? ex.getMessage() : defaultDetail);
+        return pd;
+
     }
 }

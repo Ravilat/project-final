@@ -13,11 +13,20 @@ public class ProfileTestData {
     public static MatcherFactory.Matcher<Profile> PROFILE_MATCHER =
             MatcherFactory.usingIgnoringFieldsComparator(Profile.class, "user");
 
+    public static MatcherFactory.Matcher<ProfileTo> PROFILE_TO_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(ProfileTo.class, "id");
+
+    public static final long ADMIN_ID = 2;
+    public static final String USER_MAIL = "user@gmail.com";
+    public static final String ADMIN_MAIL = "admin@gmail.com";
+    public static final String GUEST_MAIL = "guest@gmail.com";
+
     public static ProfileTo USER_PROFILE_TO = new ProfileTo(null,
             Set.of("assigned", "overdue", "deadline"),
             Set.of(new ContactTo("skype", "userSkype"),
                     new ContactTo("mobile", "+01234567890"),
                     new ContactTo("website", "user.com")));
+
     public static ProfileTo GUEST_PROFILE_EMPTY_TO = new ProfileTo(null,
             Set.of(),
             Set.of());
@@ -44,7 +53,6 @@ public class ProfileTestData {
                         new ContactTo("website", "new.com"),
                         new ContactTo("github", "newGitHub"),
                         new ContactTo("tg", "newTg"),
-                        new ContactTo("vk", "newVk"),
                         new ContactTo("linkedin", "newLinkedin")));
     }
 
@@ -57,7 +65,6 @@ public class ProfileTestData {
                 new Contact(id, "website", "new.com"),
                 new Contact(id, "github", "newGitHub"),
                 new Contact(id, "tg", "newTg"),
-                new Contact(id, "vk", "newVk"),
                 new Contact(id, "linkedin", "newLinkedin")));
         return profile;
     }

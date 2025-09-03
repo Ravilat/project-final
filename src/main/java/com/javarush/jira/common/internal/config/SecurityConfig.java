@@ -40,6 +40,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PASSWORD_ENCODER;

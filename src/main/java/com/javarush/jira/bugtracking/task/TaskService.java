@@ -14,13 +14,18 @@ import com.javarush.jira.common.error.NotFoundException;
 import com.javarush.jira.common.util.Util;
 import com.javarush.jira.login.AuthUser;
 import com.javarush.jira.ref.RefType;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.javarush.jira.bugtracking.ObjectType.TASK;
 import static com.javarush.jira.bugtracking.task.TaskUtil.fillExtraFields;
@@ -139,5 +144,75 @@ public class TaskService {
         if (!userType.equals(possibleUserType)) {
             throw new DataConflictException(String.format(assign ? CANNOT_ASSIGN : CANNOT_UN_ASSIGN, userType, task.getStatusCode()));
         }
+    }
+
+    @Transactional
+    public void createAndSetTag(long id, @NotBlank String tag) {
+        Task task = handler.getRepository().getExisted(id);
+        if (task.getTags().isEmpty()) {
+            Set<String> tags = new HashSet<>();
+            tags.add(tag);
+            task.setTags(tags);
+        } else {
+            task.getTags().add(tag);
+        }
+    }
+
+    @Transactional
+    public void deleteTag(long id, @NotBlank String tag) {
+        Task task = handler.getRepository().getExisted(id);
+        Set<String> tags = task.getTags();
+        if (tags.isEmpty() || !tags.contains(tag)) {
+            throw new NotFoundException(String.format("Tag %s not found in task %d", tag, task.getId()));
+        }
+        tags.remove(tag);
+    }
+
+    public List<String> getTags(long id) {
+        Task task = handler.getRepository().getExisted(id);
+        return task.getTags().stream().toList();
+    }
+
+    public List<Task> getTasksByTag(String tag) {
+        return handler.getRepository().findAllByTag(tag);
+    }
+
+    public Duration getTimeTaskAtWorking(Task task) {
+        Long taskId = task.getId();
+        List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(taskId);
+
+        LocalDateTime timeInProgress = activities.stream()
+                .filter(a -> "in_progress".equals(a.getStatusCode()))
+                .map(Activity::getUpdated)
+                .findFirst()
+                .orElseThrow();
+
+        LocalDateTime timeReadyForReview = activities.stream()
+                .filter(a -> "ready_for_review".equals(a.getStatusCode()))
+                .map(Activity::getUpdated)
+                .findFirst()
+                .orElseThrow();
+
+        return Duration.between(timeInProgress, timeReadyForReview);
+
+    }
+
+    public Duration getTimeTaskAtTesting(Task task) {
+        Long taskId = task.getId();
+        List<Activity> activities = activityHandler.getRepository().findAllByTaskIdOrderByUpdatedDesc(taskId);
+
+        LocalDateTime timeDone = activities.stream()
+                .filter(a -> "done".equals(a.getStatusCode()))
+                .map(Activity::getUpdated)
+                .findFirst()
+                .orElseThrow();
+
+        LocalDateTime timeReadyForReview = activities.stream()
+                .filter(a -> "ready_for_review".equals(a.getStatusCode()))
+                .map(Activity::getUpdated)
+                .findFirst()
+                .orElseThrow();
+
+        return Duration.between(timeReadyForReview, timeDone);
     }
 }

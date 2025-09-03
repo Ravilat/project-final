@@ -20,12 +20,23 @@
                 <pattern>%d{MM-dd HH:mm:ss.SSS} [%8.8thread] %-5.5level| %class{60}.%M:%L %msg%n</pattern>
             </encoder>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>logs/jirarush.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <fileNamePattern>/app/logs/jirarush.%d{yyyy-MM-dd}.log</fileNamePattern>
+<!--                <fileNamePattern>logs/jirarush.%d{yyyy-MM-dd}.log</fileNamePattern>-->
                 <maxHistory>30</maxHistory>
             </rollingPolicy>
         </appender>
+
+
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+
         <root level="WARN">
             <appender-ref ref="FILE"/>
+            <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 </configuration>

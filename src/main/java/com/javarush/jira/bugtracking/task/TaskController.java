@@ -69,6 +69,32 @@ public class TaskController {
         return sortedTasks;
     }
 
+    @PatchMapping("/{id}/set-Tag")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void setTag(@PathVariable long id, @NotBlank @RequestParam String tag) {
+        log.info("set to task(id={}) tag {}", id, tag);
+        taskService.createAndSetTag(id, tag);
+    }
+
+    @PatchMapping("/{id}/delete-Tag")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTag(@PathVariable long id, @NotBlank @RequestParam String tag) {
+        log.info("delete from task(id={}) tag {}", id, tag);
+        taskService.deleteTag(id, tag);
+    }
+
+    @GetMapping("/{id}/tags")
+    public List<String> getAllTagsFromTask(@PathVariable long id) {
+        log.info("get all tags from task by id={}", id);
+        return taskService.getTags(id);
+    }
+
+    @GetMapping("/by-tag/{tag}")
+    public List<TaskTo> getTasksByTag(@PathVariable String tag) {
+        log.info("get all tasks for tag {}", tag);
+        return handler.getMapper().toToList(taskService.getTasksByTag(tag));
+    }
+
     @GetMapping("/by-project")
     public List<TaskTo> getAllByProject(@RequestParam long projectId) {
         log.info("get all for project {}", projectId);
@@ -92,6 +118,7 @@ public class TaskController {
     public void enable(@PathVariable long id, @RequestParam boolean enabled) {
         handler.enable(id, enabled);
     }
+
 
     @PatchMapping("/{id}/change-status")
     @ResponseStatus(HttpStatus.NO_CONTENT)
