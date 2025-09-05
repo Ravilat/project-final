@@ -49,16 +49,11 @@
 
 9) \+
 
-10) \+ docker-compose завелся, но есть нюансы:
-    1. изменил реализацию класса com.javarush.jira.common.internal.config.ThymeleafConfig:
-    в оригинальном проекте загрузка шаблонов Thymeleaf происходит с помощью FileTemplateResolver
-    (и через IDEA проект запускается только в таком варианте), а для запуска через docker-compose нужна
-    реализация резолвера через ClassLoaderTemplateResolver. Чтобы с Idea запускалось с ClassLoaderTemplateResolver,
-    нужно перемещать вьюшки в src/main/resources.
-    2. была ошибка в com.javarush.jira.common.internal.config.RestAuthenticationEntryPoint, при запуске через
+10) \+ docker-compose завелся, но есть нюансы
+    1. была ошибка в com.javarush.jira.common.internal.config.RestAuthenticationEntryPoint, при запуске через
     docker-compose создавалось два бина с одинаковым типом и Spring ругался. ИИ подсказал сделать через
     List<HandlerExceptionResolver> resolvers и тогда все заработало
-    3. для того, чтобы при запуске через docker-compose база заполнялась стартовыми значениями, добавил строку-ссылку
+    2. для того, чтобы при запуске через docker-compose база заполнялась стартовыми значениями, добавил строку-ссылку
     в changelog.sql для запуска data.sql после создания таблиц. Для этого data.sql должна быть в папке resources
     (скопировал data.sql)
     

@@ -16,8 +16,6 @@ import java.util.Set;
 public class ThymeleafConfig {
     private final AppProperties appProperties;
 
-    // Bean для запуска приложения через Idea
-
     @Bean
     // Attention: with TemplateEngine clear cache doesn't work
     public SpringTemplateEngine thymeleafTemplateEngine() {
@@ -31,22 +29,6 @@ public class ThymeleafConfig {
         return engine;
     }
 
-    // Bean для запуска docker-compose (чтобы использовать 1 для всех, нужно вьюшки
-    // перемещать в "правильное" место (src/main/resources/template)
-
-//    @Bean
-//    public SpringTemplateEngine thymeleafTemplateEngine() {
-//        SpringTemplateEngine engine = new SpringTemplateEngine();
-//
-//        ClassLoaderTemplateResolver viewResolver = createClasspathResolver("view/");
-//        viewResolver.setOrder(1);
-//
-//        ClassLoaderTemplateResolver mailResolver = createClasspathResolver("mails/");
-//        mailResolver.setOrder(2);
-//
-//        engine.setTemplateResolvers(Set.of(viewResolver, mailResolver));
-//        return engine;
-//    }
 
     private ClassLoaderTemplateResolver createClasspathResolver(String folder) {
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
