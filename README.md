@@ -1,30 +1,39 @@
-## [REST API](http://localhost:8080/doc)
+## Финальный проект JavaRush университета
 
-## Концепция:
+Доска задач по типу Jira или Trello
 
-- Spring Modulith
-    - [Spring Modulith: достигли ли мы зрелости модульности](https://habr.com/ru/post/701984/)
-    - [Introducing Spring Modulith](https://spring.io/blog/2022/10/21/introducing-spring-modulith)
-    - [Spring Modulith - Reference documentation](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/)
+Технологии
+- Spring Boot
+- Spring JPA
+- Hibernate
+- PostgreSQL
+- Liquibase
+- Spring Security
+- Spring MVC
+- Thymeleaf
+- jQuery
+- Swagger
+- Caffeine
+- Lombok
+- Mapstruct
+- Spring Test
+- JUnit
+- Docker
 
-```
-  url: jdbc:postgresql://localhost:5432/jira
-  username: jira
-  password: JiraRush
-```
+Твои задачи на выбор
 
-- Есть 2 общие таблицы, на которых не fk
-    - _Reference_ - справочник. Связь делаем по _code_ (по id нельзя, тк id привязано к окружению-конкретной базе)
-    - _UserBelong_ - привязка юзеров с типом (owner, lead, ...) к объекту (таска, проект, спринт, ...). FK вручную будем
-      проверять
-
-## Аналоги
-
-- https://java-source.net/open-source/issue-trackers
-
-## Тестирование
-
-- https://habr.com/ru/articles/259055/
+1) Ознакомиться с проектом
+2) Удалить социальные сети: vk, yandex
+3) Вынести чувствительную информацию в отдельный проперти файл
+4) Переделать тесты так, чтоб во время тестов использовалась in memory БД (H2), а не PostgreSQL
+5) Написать тесты для всех публичных методов контроллера ProfileRestController
+6) Сделать рефакторинг метода com.javarush.jira.bugtracking.attachment.FileUtil#upload чтоб он использовал современный подход для работы с файловой системой
+7) Добавить новый функционал: добавления тегов к задаче (REST API + реализация на сервисе). Фронт делать необязательно. Таблица task_tag уже создана
+8) Добавить подсчет времени сколько задача находилась в работе и тестировании.
+9) Написать Dockerfile для основного сервера 
+10) Написать docker-compose файл для запуска контейнера сервера вместе с БД и nginx
+11) Добавить локализацию минимум на двух языках для шаблонов писем (mails) и стартовой страницы index.html
+12) Переделать механизм распознавания «свой-чужой» между фронтом и беком с JSESSIONID на JWT
 
 # Список выполненных задач:
 
@@ -51,8 +60,8 @@
 
 10) \+ docker-compose завелся, но есть нюансы
     1. была ошибка в com.javarush.jira.common.internal.config.RestAuthenticationEntryPoint, при запуске через
-    docker-compose создавалось два бина с одинаковым типом и Spring ругался. ИИ подсказал сделать через
-    List<HandlerExceptionResolver> resolvers и тогда все заработало
+    docker-compose создавалось два бина с одинаковым типом и Spring ругался.
+    Сделал List<HandlerExceptionResolver> resolvers и тогда все заработало
     2. для того, чтобы при запуске через docker-compose база заполнялась стартовыми значениями, добавил строку-ссылку
     в changelog.sql для запуска data.sql после создания таблиц. Для этого data.sql должна быть в папке resources
     (скопировал data.sql)
